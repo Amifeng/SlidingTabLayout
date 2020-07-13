@@ -68,11 +68,6 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
         }
     }
 
-    //可设置显示默认第几个
-    fun setSelectedTab(tabPosition: Int = 0) {
-        this.tabPosition = tabPosition
-    }
-
     private fun toggleTabView() {
         if (subInventoryText != selectedText) {
             subInventoryText.setTextColor(resources.getColor(R.color.colorWhite))
@@ -132,6 +127,11 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
         updateSelectedTab()
     }
 
+    //可设置显示默认位置
+    fun setSelectedTab(tabPosition: Int = 0) {
+        this.tabPosition = tabPosition
+    }
+    //设置显示位置
     fun updateSelectedTab(position: Int = -1) {
         if (position > -1 && tabPosition != position) {
             this.tabPosition = position

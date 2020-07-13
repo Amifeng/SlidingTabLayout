@@ -4,24 +4,32 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Canvas
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import kotlinx.android.synthetic.main.header_inventory_category.view.*
 import kotlinx.android.synthetic.main.view_sliding_tab_layout2.view.*
+import kotlinx.android.synthetic.main.view_sliding_tab_layout2.view.left_text
+import kotlinx.android.synthetic.main.view_sliding_tab_layout2.view.mid_text
+import kotlinx.android.synthetic.main.view_sliding_tab_layout2.view.right_text
 import kotlin.math.roundToInt
 
 class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
     private var subInventoryText: TextView
     private var selectedText: TextView
+    private var tabPosition: Int = 0
 
     private var indicatorLeft = -1
     private var indicatorRight = -1
     private var indicatorAnimator: ValueAnimator? = null
-    private var isIndicatorAnimatorEnd: Boolean = true
 
     companion object {
         private const val DEFAULT_TOGGLE_DURATION: Long = 300
@@ -36,8 +44,7 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
         selectedText.setTextColor(resources.getColor(R.color.colorWhite))
 
         left_text.setOnClickListener {
-            if (isIndicatorAnimatorEnd && subInventoryText != left_text) {
-                isIndicatorAnimatorEnd = false
+            if (subInventoryText != left_text) {
                 subInventoryText = left_text
                 animateIndicatorToPosition()
                 toggleTabView()
@@ -45,8 +52,7 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
         }
 
         mid_text.setOnClickListener {
-            if (isIndicatorAnimatorEnd && subInventoryText != mid_text) {
-                isIndicatorAnimatorEnd = false
+            if (subInventoryText != mid_text) {
                 subInventoryText = mid_text
                 animateIndicatorToPosition()
                 toggleTabView()
@@ -54,8 +60,7 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
         }
 
         right_text.setOnClickListener {
-            if (isIndicatorAnimatorEnd && subInventoryText != right_text) {
-                isIndicatorAnimatorEnd = false
+            if (subInventoryText != right_text) {
                 subInventoryText = right_text
                 animateIndicatorToPosition()
                 toggleTabView()
@@ -63,9 +68,17 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
         }
     }
 
+    //可设置显示默认第几个
+    fun setSelectedTab(tabPosition: Int = 0) {
+        this.tabPosition = tabPosition
+    }
+
     private fun toggleTabView() {
-        subInventoryText.setTextColor(resources.getColor(R.color.colorWhite))
-        selectedText.setTextColor(resources.getColor(R.color.colorBlack))
+        if (subInventoryText != selectedText) {
+            subInventoryText.setTextColor(resources.getColor(R.color.colorWhite))
+            selectedText.setTextColor(resources.getColor(R.color.colorBlack))
+            selectedText = subInventoryText
+        }
     }
 
     private fun setIndicatorPosition(left: Int, right: Int) {
@@ -95,7 +108,6 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
             animator?.setFloatValues(0F, 100F)
             animator?.addUpdateListener { animator1 ->
                 val fraction = animator1.animatedFraction
-                Log.i("Tab-animatedFraction", ">>>>>>${animator1.animatedFraction}")
                 setIndicatorPosition(
                     lerpValue(startLeft, targetLeft, fraction),
                     lerpValue(startRight, targetRight, fraction)
@@ -103,8 +115,7 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
             }
             animator?.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animator: Animator) {
-                    selectedText = subInventoryText
-                    isIndicatorAnimatorEnd = true
+                    //ignore here
                 }
             })
             animator?.start()
@@ -113,6 +124,38 @@ class SlidingTabLayout(context: Context, attrs: AttributeSet) : LinearLayout(con
 
     private fun lerpValue(startValue: Int, endValue: Int, fraction: Float): Int {
         return startValue + (fraction * (endValue - startValue)).roundToInt()
+    }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        super.onLayout(changed, l, t, r, b)
+        //更新显示tab位置
+        updateSelectedTab()
+    }
+
+    fun updateSelectedTab(position: Int = -1) {
+        if (position > -1 && tabPosition != position) {
+            this.tabPosition = position
+        }
+        when (tabPosition) {
+            0 -> {
+                subInventoryText = left_text
+            }
+            1 -> {
+                subInventoryText = mid_text
+            }
+            2 -> {
+                subInventoryText = right_text
+            }
+            else -> {
+            }
+        }
+        if (position == -1){
+            viewIndicator.left = subInventoryText?.left
+            viewIndicator.right = subInventoryText?.right
+        }else{
+            animateIndicatorToPosition()
+        }
+        toggleTabView()
     }
 
 }

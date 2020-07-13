@@ -6,16 +6,6 @@
     android:orientation="horizontal"
     android:padding="5dp">
 
-    <View
-        android:id="@+id/viewIndicator"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_button_category_purple"
-        android:elevation="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="visible" />
-
     <TextView
         android:id="@+id/left_text"
         android:layout_width="100dp"
@@ -55,4 +45,15 @@
         app:layout_constraintStart_toEndOf="@+id/mid_text"
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/colorBlack" />
+
+    <View
+        android:id="@+id/viewIndicator"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_button_category_purple"
+        android:elevation="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

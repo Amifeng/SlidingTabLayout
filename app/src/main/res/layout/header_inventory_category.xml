@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/left_text"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:elevation="3dp"
+        android:gravity="center"
+        android:text="Non-Flu" />
+
+    <TextView
+        android:id="@+id/mid_text"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:gravity="center"
+        android:elevation="3dp"
+        android:text="Flu" />
+
+    <TextView
+        android:id="@+id/right_text"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:elevation="3dp"
+        android:gravity="center"
+        android:text="Orders" />
+
+</LinearLayout>
